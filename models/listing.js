@@ -2,16 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const listingSchema = new Schema ({
-    title : {
-        type: String,
-        required:true,
-    },
+    title: String,
     description: String,
-    image: String,
+    // image: String,
     price: Number,
     location:String,
     country: String,
 });
 
-const Listing = mongoose.model("Listing" , listingSchema ); 
+const Listing = mongoose.model("listings" , listingSchema ); 
 module.exports = Listing;
