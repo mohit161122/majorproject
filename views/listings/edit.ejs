@@ -3,23 +3,30 @@
     <div class="col-8  offset-2 ">
  
     <h3>Edit your  Listing</h3>
-    <form method="post" action="/listings/<%=listing.id %>?_method=PUT" >
+    <form method="post" action="/listings/<%=listing.id %>?_method=PUT"  novalidate class="needs-validation">
 
 
 <div class="mb-3">
    <label for="title" calss="form-label"> Title </label>
-  <input name="listing[title]" value="<%=listing.title %>" type="text" class="form-control" >
+  <input name="listing[title]" value="<%=listing.title %>" type="text" class="form-control" required >
+
+    <div class="valid-feedback">Title Looks good!</div>
+
   </div>
         
   <div class="mb-3">
      <label for="description" calss="form-label"> description </label>
-    <textarea style="height: 100px" name="listing[description]" class="form-control" > <%=listing.description %>   </textarea>
+    <textarea style="height: 100px" name="listing[description]" class="form-control" required  > <%=listing.description %>   </textarea>
+
+ <div class="invalid-feedback">please enter a short description</div>
 
   </div>
         
        <div class="mb-3">
         <label for="image" calss="form-label"> Image </label>
-        <input name="listing[image][url]" value="<%=listing.image.url %>" type="text" class="form-control">
+        <input name="listing[image][url]" value="<%=listing.image.url %>" type="text"   class="form-control" required >
+
+         <div class="invalid-feedback">please enter a valid link for image</div>
 
          </div>
 
@@ -27,19 +34,26 @@
           
          <div class="mb-3 col-md-4">
            <label for="price" calss="form-label"> Price</label>
-           <input name="listing[price]" value="<%=listing.price %>"  type="number" class="form-control">
+           <input name="listing[price]" value="<%=listing.price %>"   type="number" class="form-control" required>
+
+             <div class="invalid-feedback">Price Should be valid</div>
 
         </div>
        
         <div class="mb-3 col-md-8" >
             <label for="country" calss="form-label"> Country </label>
-          <input name="listing[country]" value="<%=listing.country %>" type="text" class="form-control">
+          <input name="listing[country]" value="<%=listing.country %>"   type="text" class="form-control" required>
         </div>
+
+        
+
          </div>
         
         <div class="mb-3" >
            <label for="title" calss="form-label"> Location </label>
-          <input name="listing[location]" value="<%=listing.location %>" type="text" class="form-control">
+          <input name="listing[location]" value="<%=listing.location %>"   type="text" class="form-control" required >
+
+           <div class="invalid-feedback"> location Should be valid</div>
 
         </div>
         
@@ -55,4 +69,5 @@
     </div>
     </div>
     <br>
+    <script src="/js/script.js"></script>
 
