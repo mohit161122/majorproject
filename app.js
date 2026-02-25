@@ -9,6 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const {listingSchema} = require("./schema.js");
+const Review = require("./models/review.js");
 
 
 
@@ -109,6 +110,22 @@ app.delete("/listings/:id",wrapAsync( async (req, res) => {
  res.redirect("/listings");
 }));
 
+//Review Route --> post route 
+app.post("/listings/:id/reviews", async (req, res) => {
+ let listing =  await Listing.findById(req.params.id);
+ let newReview = new Review(req.body.review);
+
+ listing.reviews.push(newReview);
+
+ await newReview.save();
+ await listing.save();
+//  console.log("New review was added");
+//  res.send("Review added successfully");
+
+res.render("listings/show.ejs", {listing});
+});
+
+
 
 
 // app.get('/testlisting', async (req, res) => {
@@ -140,6 +157,13 @@ app.use((err ,req,res,next) =>{
   res.status(statusCode).render("error.ejs", {err});
  // res.status(statusCode).send(message);
 });
+
+
+
+
+
+
+
 
 
 app.listen(port, () => {
