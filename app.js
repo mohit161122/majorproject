@@ -12,7 +12,6 @@ const {listingSchema} = require("./schema.js");
 
 
 
-
 // mongosh
 main().then((res) => {
     console.log("Connected to DB")
@@ -67,7 +66,6 @@ app.get("/listings", wrapAsync(  async (req, res) => {
 app.get("/listings/new", (req, res) => {
   res.render("listings/new.ejs");
 });
-
 
 
 //show route
@@ -137,21 +135,15 @@ app.all("*splat", (req, res, next) => {
 });
 
 
-
 app.use((err ,req,res,next) =>{
   let {statusCode= 500 , message = "Somethig went Wrong!"} = err;
   res.status(statusCode).render("error.ejs", {err});
-
-
  // res.status(statusCode).send(message);
 });
-
-
 
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
 
 
