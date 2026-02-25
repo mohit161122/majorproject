@@ -129,7 +129,7 @@ app.delete("/listings/:id",wrapAsync( async (req, res) => {
 
 
 
-               // this is not working
+               // this is working
 app.all("*splat", (req, res, next) => {
   next(new ExpressError(404, "Page not Found! Due to wrong URL "));
 });
