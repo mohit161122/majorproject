@@ -136,8 +136,26 @@ app.post("/listings/:id/reviews", validationReview  , wrapAsync(async (req, res)
 //  console.log("New review was added");
 //  res.send("Review added successfully");
 
-res.render("listings/show.ejs", {listing});
+res.redirect(`/listings/${req.params.id}`);
 }));
+
+
+//Review delete route
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+  let  { id , reviewId} = req.params;
+   await  Listing.findByIdAndUpdate (id, { $pull: { reviews: reviewId } });
+    await Review.findById(reviewId);
+    res.redirect(`/listings/${id}`);
+}));
+
+
+
+
+
+
+
+
+
 
 
 

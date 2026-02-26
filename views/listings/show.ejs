@@ -1,13 +1,13 @@
  <% layout("/layouts/boilerplate") -%>
  <div class="row mt-3">
-    <div class="col-8 offset-2">
-        <div class="card col-6 offset-2 show-card" style="width: 18rem;">
+    <div class="col-8  offset-2">
+        <div class="card col-6 offset-2 show-card" style="width: 30rem;">
     <h3><%= listing.title %></h3>
   <img src=" <%= listing.image.url %>" class="card-img-top show-img" alt="listings_image">
   <div class="card-body">
     <p class="card-text"> 
-        <!-- <b><%= listing.title %></p></b> <br> -->
-        <br>
+        
+       
         <%=listing.description %> <br>
         <br>
          &#8377;<%= listing.price?.toLocaleString("en-IN") ?? "N/A" %> <br>
@@ -19,10 +19,12 @@
 </div>
   </div>
 
+  <br>
 
-  <div class="btns" >
+  <div class="btns col-20" >
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-success col-1 offset-2" >Edit </a>
  <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+  
     <button class="btn btn-danger  offset-4" >Delete </button>
     <br>
     
@@ -59,13 +61,19 @@
         <div class="card-body">
           <h5 class="card-title">Jane Doe</h5>
           <p class="card-text" >  <%= review.comment %> </p>
-          <p class="card-text"> <%= review.rating %></p>
+          <p class="card-text"> <%= review.rating %> stars</p>
 
-        </div>
 
+      
+    
+        <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="post"class="mb-3" > 
+          <button class="btn btn-sm btn-dark ">Delete</button>
+        </form>
+       
+
+</div>
       </div>
       <%} %>
-
 </div>
    </div>
     </div>
