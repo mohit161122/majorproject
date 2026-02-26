@@ -8,7 +8,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const {listingSchema} = require("./schema.js");
+const {listingSchema , reviewSchema} = require("./schema.js");
 const Review = require("./models/review.js");
 
 
@@ -40,10 +40,24 @@ app.get("/", (req, res) => {
 });
 
 
-//validationListing
+//validationListing --> for listing form
 const validationListing = (req , res , next) =>{
   // console.log("REQ BODY:", req.body);
   let {error} = listingSchema.validate(req.body);
+  if(error){
+    let errMsg = error.details.map((el) => el.message).join(",");
+    //  console.log("VALIDATION ERROR:", errMsg); 
+    throw new ExpressError(400 ,errMsg);
+  }else{
+    next();
+  }
+};
+
+
+//validationListing --> for Review
+const validationReview = (req , res , next) =>{
+  // console.log("REQ BODY:", req.body);
+  let {error} = reviewSchema.validate(req.body);
   if(error){
     let errMsg = error.details.map((el) => el.message).join(",");
     //  console.log("VALIDATION ERROR:", errMsg); 
@@ -111,7 +125,7 @@ app.delete("/listings/:id",wrapAsync( async (req, res) => {
 }));
 
 //Review Route --> post route 
-app.post("/listings/:id/reviews", async (req, res) => {
+app.post("/listings/:id/reviews", validationReview  , wrapAsync(async (req, res) => {
  let listing =  await Listing.findById(req.params.id);
  let newReview = new Review(req.body.review);
 
@@ -123,7 +137,7 @@ app.post("/listings/:id/reviews", async (req, res) => {
 //  res.send("Review added successfully");
 
 res.render("listings/show.ejs", {listing});
-});
+}));
 
 
 
@@ -157,13 +171,6 @@ app.use((err ,req,res,next) =>{
   res.status(statusCode).render("error.ejs", {err});
  // res.status(statusCode).send(message);
 });
-
-
-
-
-
-
-
 
 
 app.listen(port, () => {
