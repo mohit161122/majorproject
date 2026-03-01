@@ -50,16 +50,16 @@ router.delete("/:reviewId", wrapAsync(async (req, res) => {
 
 
                // this is working
-router.all("*splat", (req, res, next) => {
-  next(new ExpressError(404, "Page not Found! Due to wrong URL "));
-});
+// router.all("*splat", (req, res, next) => {
+//   next(new ExpressError(404, "Page not Found! Due to wrong URL "));
+// });
 
 
-router.use((err ,req,res,next) =>{
-  let {statusCode= 500 , message = "Somethig went Wrong!"} = err;
-  res.status(statusCode).render("error.ejs", {err});
- // res.status(statusCode).send(message);
-});
+// router.use((err ,req,res,next) =>{
+//   let {statusCode= 500 , message = "Somethig went Wrong!"} = err;
+//   res.status(statusCode).render("error.ejs", {err});
+//  // res.status(statusCode).send(message);
+// });
 
 
 
