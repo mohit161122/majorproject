@@ -4,6 +4,8 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const {listingSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
+const Review = require("../models/review.js");
+
 
 
 //validationListing --> for listing form
@@ -68,6 +70,7 @@ router.get("/:id/edit", wrapAsync( async (req, res) => {
 router.put("/:id", validationListing, wrapAsync(async (req, res) => {
   let {id} = req.params;
   await Listing.findByIdAndUpdate(id,{...req.body.listing});
+  req.flash("success" , "Listing updated successfully!");
   res.redirect(`/listings/${id}`);
 }));
 
@@ -76,7 +79,9 @@ router.put("/:id", validationListing, wrapAsync(async (req, res) => {
 router.delete("/:id",wrapAsync( async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
+   await Review.deleteMany({ _id: { $in: deletedListing.reviews } });
   console.log(deletedListing);
+  req.flash("success" , "Listing deleted successfully!");
  res.redirect("/listings");
 }));
 

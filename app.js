@@ -77,6 +77,8 @@ app.use((req,res,next) => {
 
 
 
+
+
 //listings routes
 app.use("/listings", listings);
 //reviews routes
