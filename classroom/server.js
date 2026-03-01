@@ -20,16 +20,30 @@ const sessionOptions = {
 app.use(session(sessionOptions));
  app.use(flash());
 
+app.use((req,res,next ) => {
+  res.locals.successMsg = req.flash("sucess");
+  res.locals.errorMsg = req.flash("error");
+  next();
+});
+
+
+
 app.get("/register" , (req,res) => {
   let { name = "Anonymous"} = req.query;
   req.session.name = name;
-  req.flash("sucess" , " user is registered successfully! ");
+  
+  if(name == "Anonymous"){
+    req.flash("error" , "User  not  registered ");
+  }else{
+    req.flash("success" , "User is registered successfully! ");
+  }
+  
   res.redirect("/hello");
 });
 
 app.get("/hello" ,(req,res) => {
   
-  res.render("page.ejs" , {name: req.session.name, msg: req.flash("sucess")});
+   res.render("page.ejs" , {name: req.session.name});
 });
 
 
