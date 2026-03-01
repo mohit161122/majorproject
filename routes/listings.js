@@ -44,12 +44,15 @@ router.get("/:id", wrapAsync( async (req, res) => {
 }));
 
 
-//Create route --> code is incurrect 
+//Create route
 router.post("/",validationListing, wrapAsync(async (req, res , next) => {
   const newListing = new Listing(req.body.listing);
   await newListing.save();
+  //flash message
+  req.flash("success" , "New listing created successfully!");
   res.redirect("/listings");
 }));
+
 
 
 //Edit Route-->

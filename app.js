@@ -14,6 +14,18 @@ const ExpressError = require("./utils/ExpressError.js");
 const listings = require("./routes/listings.js");
 const reviews = require("./routes/review.js");
 
+// for --> coockies
+const session = require("express-session");
+
+//for flash messages
+const flash = require("connect-flash");
+
+
+
+
+
+
+
 // mongosh --> 
 main().then((res) => {
     console.log("Connected to DB")
@@ -26,6 +38,7 @@ async function main() {
 
 
 
+
 app.set("view engine" , "ejs" );
 app.set("views" , path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
@@ -35,10 +48,34 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname , "/public")));
 
 
+//coockies -->started
+const sessionOptions= {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookies: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000 ,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true
+  },
+ };
 
-app.get("/", (req, res) => {
-  res.send("Game is started ");
+ app.get("/", (req, res) => {
+   res.send("Game is started ");
+ });
+
+
+
+app.use(session(sessionOptions));
+
+//flash
+app.use(flash());
+app.use((req,res,next) => {
+  res.locals.success = req.flash("success");
+  next();
 });
+
+
 
 //listings routes
 app.use("/listings", listings);
