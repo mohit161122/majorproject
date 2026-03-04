@@ -1,27 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
-const ExpressError = require("../utils/ExpressError.js");
-const {listingSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
-const { isLoggedIn } = require("../middlewares.js");
-
-
-
-//validationListing --> for listing form
-const validationListing = (req , res , next) =>{
-  // console.log("REQ BODY:", req.body);
-  let {error} = listingSchema.validate(req.body);
-  if(error){
-    let errMsg = error.details.map((el) => el.message).join(",");
-    //  console.log("VALIDATION ERROR:", errMsg); 
-    throw new ExpressError(400 ,errMsg);
-  }else{
-    next();
-  }
-};
-
+const { isLoggedIn,isOwner,validationListing } = require("../middlewares.js");
 
 
 
@@ -69,7 +51,7 @@ router.post("/", isLoggedIn , validationListing, wrapAsync(async (req, res , nex
 
 
 //Edit Route-->
-router.get("/:id/edit", isLoggedIn ,wrapAsync( async (req, res) => {
+router.get("/:id/edit", isLoggedIn , isOwner   ,wrapAsync( async (req, res) => {
   let {id} = req.params;
    const listing =  await Listing.findById(id);
    if(!listing){
@@ -83,7 +65,7 @@ router.get("/:id/edit", isLoggedIn ,wrapAsync( async (req, res) => {
 
 
 //Update rought-->
-router.put("/:id", isLoggedIn, validationListing,   wrapAsync(async (req, res) => {
+router.put("/:id",isLoggedIn , isOwner ,  validationListing,   wrapAsync(async (req, res) => {
   let {id} = req.params;
   await Listing.findByIdAndUpdate(id,{...req.body.listing});
   req.flash("success" , "Listing updated successfully!");
@@ -92,7 +74,7 @@ router.put("/:id", isLoggedIn, validationListing,   wrapAsync(async (req, res) =
 
 
 //Delete Route-->
-router.delete("/:id", isLoggedIn , wrapAsync( async (req, res) => {
+router.delete("/:id", isLoggedIn , isOwner , wrapAsync( async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
    await Review.deleteMany({ _id: { $in: deletedListing.reviews } });
