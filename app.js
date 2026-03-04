@@ -103,14 +103,14 @@ app.use((req,res,next) => {
 
 
 //passport testing route
-app.get("/demouser" , async (req,res) => {
-  let fackeUser = new User({
-    email: "student@gmail.com",
-    username: "delta-student",
-  });
-  let registeredUser = await User.register(fackeUser , "helloworld");
-  res.send(registeredUser);
-});
+// app.get("/demouser" , async (req,res) => {
+//   let fackeUser = new User({
+//     email: "student@gmail.com",
+//     username: "delta-student",
+//   });
+//   let registeredUser = await User.register(fackeUser , "helloworld");
+//   res.send(registeredUser);
+// });
 
 
 
