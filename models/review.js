@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { create } = require('./listing');
 const Schema = mongoose.Schema;
 
 const reviewsSchema = new Schema ({
@@ -12,8 +11,11 @@ const reviewsSchema = new Schema ({
     createdAt: {
         type: Date,
         default: Date.now(),
-
-    }
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref:"User",
+    },
 });
 
 module.exports = mongoose.model("reviews" , reviewsSchema );    
