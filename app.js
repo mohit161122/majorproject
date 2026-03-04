@@ -27,14 +27,6 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
 
-
-
-
-
-
-
-
-
 // mongosh --> 
 main().then((res) => {
     console.log("Connected to DB")
@@ -47,7 +39,7 @@ async function main() {
 
 
 
-
+//Middlewares
 app.set("view engine" , "ejs" );
 app.set("views" , path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
@@ -57,7 +49,7 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname , "/public")));
 
 
-//coockies -->started
+//Coockies -->started
 const sessionOptions= {
   secret: "mysupersecretcode",
   resave: false,
