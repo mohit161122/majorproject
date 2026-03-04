@@ -24,6 +24,7 @@ const validationListing = (req , res , next) =>{
 
 
 
+
 //Index--> 
 router.get("/", wrapAsync(  async (req, res) => {
   const allListings = await Listing.find({});
