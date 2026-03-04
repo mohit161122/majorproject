@@ -20,6 +20,14 @@ const session = require("express-session");
 //for flash messages
 const flash = require("connect-flash");
 
+//passport
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+
+
+
+
 
 
 
@@ -67,13 +75,40 @@ const sessionOptions= {
 
 
 app.use(session(sessionOptions));
-
 //flash
 app.use(flash());
+
+
+// passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
+
+
+
+
+
 app.use((req,res,next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
+});
+
+
+
+//passport testing route
+app.get("/demouser" , async (req,res) => {
+  let fackeUser = new User({
+    email: "student@gmail.com",
+    username: "delta-student",
+  });
+  let registeredUser = await User.register(fackeUser , "helloworld");
+  res.send(registeredUser);
 });
 
 
