@@ -82,13 +82,10 @@ passport.deserializeUser(User.deserializeUser());
 
 
 
-
-
-
-
 app.use((req,res,next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user;   // this is for showing the username in navbar when user is logged in
   next();
 });
 
