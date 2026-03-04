@@ -38,7 +38,6 @@ async function main() {
 }
 
 
-
 //Middlewares
 app.set("view engine" , "ejs" );
 app.set("views" , path.join(__dirname, "views"));
@@ -78,6 +77,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 
 
 
