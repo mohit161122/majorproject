@@ -11,8 +11,9 @@ const ExpressError = require("./utils/ExpressError.js");
 // const {listingSchema , reviewSchema} = require("./schema.js");
 // const Review = require("./models/review.js");
 
-const listings = require("./routes/listings.js");
-const reviews = require("./routes/review.js");
+const listingRouter = require("./routes/listings.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 
 // for --> coockies
 const session = require("express-session");
@@ -115,10 +116,13 @@ app.get("/demouser" , async (req,res) => {
 
 
 
+
 //listings routes
-app.use("/listings", listings);
+app.use("/listings", listingRouter);
 //reviews routes
-app.use("/listings/:id/reviews" , reviews );
+app.use("/listings/:id/reviews" , reviewRouter);
+//for user
+app.use("/", userRouter);
 
 
 
