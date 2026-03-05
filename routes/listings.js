@@ -7,25 +7,45 @@ const { isLoggedIn , isOwner , validationListing } = require("../middlewares.js"
 
 const listingController = require("../constollers/listings.js")
 
-//Index--> 
-router.get("/", wrapAsync(listingController.index));
+// //Index-->  1
+// router.get("/", wrapAsync(listingController.index));
 
-//New route --> 
-router.get("/new",isLoggedIn, listingController.renderNewForm );
+// //New route --> 2
+// router.get("/new",isLoggedIn, listingController.renderNewForm );
 
-//show route --> 
-router.get("/:id", wrapAsync(listingController.showListing) );
+// //show route --> 3
+// router.get("/:id", wrapAsync(listingController.showListing) );
 
-//Create route
-router.post("/", isLoggedIn , validationListing, wrapAsync(listingController.createListing));
+// //Create route--> 1
+// router.post("/", isLoggedIn , validationListing, wrapAsync(listingController.createListing));
 
-//Edit Route-->
-router.get("/:id/edit", isLoggedIn , isOwner   ,wrapAsync(listingController.renderEditForm));
+// //Edit Route--> 4
+// router.get("/:id/edit", isLoggedIn , isOwner   ,wrapAsync(listingController.renderEditForm));
 
-//Update rought-->
-router.put("/:id",isLoggedIn , isOwner ,  validationListing,   wrapAsync(listingController.updateListing));
+// //Update rought-->3
+// router.put("/:id",isLoggedIn , isOwner ,  validationListing,   wrapAsync(listingController.updateListing));
 
-//Delete Route-->
-router.delete("/:id", isLoggedIn , isOwner , wrapAsync(listingController.destroyListing));
+// //Delete Route-->3
+// router.delete("/:id", isLoggedIn , isOwner , wrapAsync(listingController.destroyListing));
+
+
+                 // or 
+                 
+                 //route - 1
+  router.route("/")
+  .get( wrapAsync(listingController.index))
+  .post( isLoggedIn , validationListing, wrapAsync(listingController.createListing));
+ 
+               //route 2
+  router.get("/new",isLoggedIn, listingController.renderNewForm );
+
+               //route  - 3
+  router.route("/:id")
+  .get( wrapAsync(listingController.showListing) )
+  .put(isLoggedIn , isOwner ,  validationListing,   wrapAsync(listingController.updateListing))
+  .delete( isLoggedIn , isOwner , wrapAsync(listingController.destroyListing));
+
+          //route-4
+   router.get("/:id/edit", isLoggedIn , isOwner   ,wrapAsync(listingController.renderEditForm));
 
 module.exports = router;
