@@ -7,6 +7,10 @@ const { isLoggedIn , isOwner , validationListing } = require("../middlewares.js"
 
 const listingController = require("../constollers/listings.js")
 
+// for image uploding
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 // //Index-->  1
 // router.get("/", wrapAsync(listingController.index));
 
@@ -34,7 +38,10 @@ const listingController = require("../constollers/listings.js")
                  //route - 1
   router.route("/")
   .get( wrapAsync(listingController.index))
-  .post( isLoggedIn , validationListing, wrapAsync(listingController.createListing));
+  //.post( isLoggedIn , validationListing, wrapAsync(listingController.createListing));
+  .post( upload.single("listing[image]"), (req,res) => {
+        res.send(req.file)
+  });
  
                //route 2
   router.get("/new",isLoggedIn, listingController.renderNewForm );
