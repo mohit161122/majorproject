@@ -53,7 +53,7 @@ const upload = multer({ storage });
                //route  - 3
   router.route("/:id")
   .get( wrapAsync(listingController.showListing) )
-  .put(isLoggedIn , isOwner ,  validationListing,   wrapAsync(listingController.updateListing))
+  .put(isLoggedIn, isOwner, upload.single("listing[image]"), validationListing, wrapAsync(listingController.updateListing))
   .delete( isLoggedIn , isOwner , wrapAsync(listingController.destroyListing));
 
           //route-4
