@@ -9,7 +9,8 @@ const listingController = require("../constollers/listings.js")
 
 // for image uploding
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const {storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 // //Index-->  1
 // router.get("/", wrapAsync(listingController.index));
@@ -38,10 +39,13 @@ const upload = multer({ dest: 'uploads/' })
                  //route - 1
   router.route("/")
   .get( wrapAsync(listingController.index))
-  //.post( isLoggedIn , validationListing, wrapAsync(listingController.createListing));
-  .post( upload.single("listing[image]"), (req,res) => {
-        res.send(req.file)
-  });
+  .post(
+       isLoggedIn,
+       upload.single("listing[image]"),
+       validationListing,
+      wrapAsync(listingController.createListing),
+      );
+  
  
                //route 2
   router.get("/new",isLoggedIn, listingController.renderNewForm );

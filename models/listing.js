@@ -10,8 +10,8 @@ const listingSchema = new Schema ({
     },
     description: String,
     image: {
+        url:String,
         filename: String,
-        url: String,
     },
     price: Number,
     location:String,
