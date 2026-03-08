@@ -54,7 +54,11 @@ module.exports.renderEditForm =  async (req, res) => {
     req.flash("error" , "Listing does not exist!");
     res.redirect("/listings");
    }
-   res.render("listings/edit.ejs", { listing });
+         //for size decreasing in edit page 
+    let originalImageUrl = listing.image.url;
+    originalImageUrl =originalImageUrl.replace("/uplode" , "/uplode/h_300,w_250")
+
+   res.render("listings/edit.ejs", { listing , originalImageUrl });
     // res.redirect("/listings");
 };
 
