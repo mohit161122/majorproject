@@ -66,9 +66,9 @@ const sessionOptions= {
   },
  };
 
- app.get("/", (req, res) => {
-   res.send("Game is started ");
- });
+//  app.get("/", (req, res) => {
+//    res.send("Game is started ");
+//  });
 
 
 
@@ -83,7 +83,6 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 
 
 
@@ -106,8 +105,6 @@ app.use((req,res,next) => {
 //   let registeredUser = await User.register(fackeUser , "helloworld");
 //   res.send(registeredUser);
 // });
-
-
 
 
 
