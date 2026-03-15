@@ -20,8 +20,14 @@ const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
+//const Mongo_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dbURL = process.env.ATLASDB_URL;
+
+
+
 // for --> coockies
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 
 //for flash messages
 const flash = require("connect-flash");
@@ -39,7 +45,8 @@ main().then((res) => {
 .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+  // await mongoose.connect(Mongo_URL);
+  await mongoose.connect(dbURL);
 }
 
 
@@ -53,14 +60,27 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname , "/public")));
 
+const store = MongoStore.create({
+  mongoUrl: dbURL,
+  crypto: {
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 *3600 , 
+});
+
+
+store.on("error" , (err)=> {
+  console.log("Error in Mongo session store" , err);
+});
 
 //Coockies -->started
 const sessionOptions= {
-  secret: "mysupersecretcode",
+  store,
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
-  cookies: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000 ,
+  cookie: {                                            
+    expires: new Date(Date.now() + 7*24*60*60*1000),  
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true
   },
