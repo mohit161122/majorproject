@@ -1,4 +1,5 @@
 const Listing = require("../models/listing");
+const Review = require("../models/review");
 
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
@@ -25,7 +26,7 @@ module.exports.showListing = ( async (req, res) => {
   .populate("owner");
    if(!listing){
     req.flash("error" , "Listing does not exist!");
-    res.redirect("/listings");
+    return res.redirect("/listings");
    }
    console.log(listing);
    res.render("listings/show.ejs" ,{ listing })
@@ -34,12 +35,14 @@ module.exports.showListing = ( async (req, res) => {
 
 
 module.exports.createListing   =  async (req, res , next) => {
-   let url = req.file.path;
-   let filename = req.file.filename;
-  //  console.log(url, ".." ,filename)
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
-  newListing.image = {url,filename};
+
+  if (req.file) {
+    let url = req.file.path;
+    let filename = req.file.filename;
+    newListing.image = { url, filename };
+  }
   await newListing.save();
   //flash message
   req.flash("success" , "New listing created successfully!");
@@ -52,11 +55,12 @@ module.exports.renderEditForm =  async (req, res) => {
    const listing =  await Listing.findById(id);
    if(!listing){
     req.flash("error" , "Listing does not exist!");
-    res.redirect("/listings");
+    return res.redirect("/listings");
    }
-         //for size decreasing in edit page 
-    let originalImageUrl = listing.image.url;
-    originalImageUrl =originalImageUrl.replace("/uplode" , "/uplode/h_300,w_250")
+   let originalImageUrl = listing.image?.url || "";
+   if (originalImageUrl) {
+    originalImageUrl = originalImageUrl.replace("/upload", "/upload/h_300,w_250");
+   }
 
    res.render("listings/edit.ejs", { listing , originalImageUrl });
     // res.redirect("/listings");
@@ -83,7 +87,9 @@ module.exports.updateListing = async (req, res) => {
 module.exports.destroyListing =  async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
-   await Review.deleteMany({ _id: { $in: deletedListing.reviews } });
+  if (deletedListing) {
+    await Review.deleteMany({ _id: { $in: deletedListing.reviews } });
+  }
   console.log(deletedListing);
   req.flash("success" , "Listing deleted successfully!");
  res.redirect("/listings");
