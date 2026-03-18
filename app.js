@@ -56,6 +56,8 @@ async function connectDB() {
   return mongoose.connection;
 }
 
+connectDB().catch((err) => console.error("MongoDB connection error:", err));
+
 // Trust proxy on Vercel
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
@@ -70,7 +72,6 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-const dbURL = process.env.ATLASDB_URL;
 const sessionSecret = process.env.SECRET || "change-this-secret";
 
 const store = MongoStore.create({
@@ -133,10 +134,6 @@ app.use((err, req, res, next) => {
 });
 
 if (require.main === module) {
-  connectDB().catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });
-
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
