@@ -6,6 +6,6 @@ module.exports = async (req, res) => {
     return app(req, res);
   } catch (error) {
     console.error("Vercel handler error:", error);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send(`Deployment Error: ${error.message} \n\n Stack: ${error.stack}`);
   }
 };
