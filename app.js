@@ -142,4 +142,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app, connectDB };
+module.exports = app;
