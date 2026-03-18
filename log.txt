@@ -1,0 +1,11 @@
+commit e83e135897752bc4dab4950c1ca82ee1aa5c2936
+Author: Mohit <mohitbaghel1234321@gmail.com>
+Date:   Wed Mar 18 22:11:14 2026 +0530
+
+    UI: Improve responsiveness and update DB connection
+
+commit a9255463e92b0a2d67b66edb65243e9227c3b4e8
+Author: Mohit <mohitbaghel1234321@gmail.com>
+Date:   Sun Mar 15 19:44:45 2026 +0530
+
+    add
