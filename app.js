@@ -23,16 +23,6 @@ const dbURL = process.env.ATLASDB_URL;
 
 
 
-// for --> coockies
-const session = require("express-session");
-const MongoStore = require('connect-mongo');
-
-//for flash messages
-const flash = require("connect-flash");
-
-//passport
-const passport = require("passport");
-const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
 const app = express();
