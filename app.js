@@ -21,8 +21,6 @@ const User = require("./models/user.js");
 
 const app = express();
 const port = process.env.PORT || 8080;
-const dbURL = process.env.ATLASDB_URL;
-const sessionSecret = process.env.SECRET || "change-this-secret";
 
 let isConnectedToDb = false;
 
@@ -31,6 +29,7 @@ async function connectDB() {
     return mongoose.connection;
   }
 
+  const dbURL = process.env.ATLASDB_URL;
   if (!dbURL) {
     throw new Error("ATLASDB_URL is not set. Add it to your environment variables.");
   }
@@ -41,9 +40,10 @@ async function connectDB() {
   return mongoose.connection;
 }
 
-connectDB().catch((err) => {
-  console.error("MongoDB connection error:", err);
-});
+// Trust proxy on Vercel
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -53,6 +53,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+
+const dbURL = process.env.ATLASDB_URL;
+const sessionSecret = process.env.SECRET || "change-this-secret";
 
 const store = MongoStore.create({
   mongoUrl: dbURL,
@@ -75,8 +78,6 @@ const sessionOptions = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   },
 };
 
@@ -99,16 +100,27 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-app.all("*splat", (req, res, next) => {
+// Catch-all for unmatched routes
+app.use((req, res, next) => {
   next(new ExpressError(404, "Page not Found! Due to wrong URL "));
 });
 
+// Error handler
 app.use((err, req, res, next) => {
-  let { statusCode = 500, message = "Somethig went Wrong!" } = err;
-  res.status(statusCode).render("error.ejs", { err: { ...err, message } });
+  let { statusCode = 500, message = "Something went Wrong!" } = err;
+  try {
+    res.status(statusCode).render("error.ejs", { err: { ...err, message } });
+  } catch (renderErr) {
+    console.error("Error rendering error page:", renderErr);
+    res.status(statusCode).json({ error: message });
+  }
 });
 
 if (require.main === module) {
+  connectDB().catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
