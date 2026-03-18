@@ -23,6 +23,13 @@ module.exports.saveRedirectUrl = (req, res, next) => {
   next();
 };
 
+module.exports.redirectIfAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return res.redirect("/listings");
+  }
+  next();
+};
+
 module.exports.isOwner =   async (req, res, next) =>{
   let {id} = req.params;
   let listing = await Listing.findById(id);

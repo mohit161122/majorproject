@@ -34,7 +34,13 @@ module.exports.renderLoginForm = (req,res) => {
 
 module.exports.login = async (req, res) => {
         req.flash("success" , "Welcome back to Wanderlust! you are logged in successfully");
+        const unsafeRedirects = new Set(["/login", "/signup", "/logout"]);
         let redirectUrl = res.locals.redirectUrl || "/listings";
+
+        if (!redirectUrl.startsWith("/") || unsafeRedirects.has(redirectUrl)) {
+          redirectUrl = "/listings";
+        }
+
         res.redirect(redirectUrl);
   };
 
